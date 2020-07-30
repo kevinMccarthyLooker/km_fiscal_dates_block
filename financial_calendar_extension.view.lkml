@@ -492,18 +492,30 @@ dimension: first_day_of_financial_quarter {
     type: string
     sql: concat(${count_distinct_days}, ' days. Click for each qualifying days fiscal classifications') ;;
 
-    drill_fields: [fiscal_dates.base_date_date, fiscal_dates.financial_year, fiscal_dates.financial_years_ago,
-      fiscal_dates.first_day_of_financial_year, fiscal_dates.financial_quarter_of_year,
-      fiscal_dates.financial_month_of_year, fiscal_dates.financial_week_of_year, fiscal_dates.financial_day_of_year,
-      fiscal_dates.financial_year_quarter_label, fiscal_dates.financial_quarters_ago,
-      fiscal_dates.first_day_of_financial_quarter, fiscal_dates.financial_month_of_quarter,
-      fiscal_dates.financial_week_of_quarter, fiscal_dates.financial_day_of_quarter,
-      fiscal_dates.financial_year_quarter_month_label, fiscal_dates.financial_months_ago,
-      fiscal_dates.first_day_of_financial_month, fiscal_dates.financial_week_of_month,
-      fiscal_dates.financial_day_of_month, fiscal_dates.financial_year_quarter_month_week_label,
-      fiscal_dates.financial_weeks_ago, fiscal_dates.first_day_of_financial_week, fiscal_dates.day_of_week,
-      fiscal_dates.week1_day1, fiscal_dates.range_days, fiscal_dates.count]
-#     html: <a href>{{linked_value}}</a> ;;
+#     drill_fields: [fiscal_dates.base_date_date, fiscal_dates.financial_year, fiscal_dates.financial_years_ago,
+#       fiscal_dates.first_day_of_financial_year, fiscal_dates.financial_quarter_of_year,
+#       fiscal_dates.financial_month_of_year, fiscal_dates.financial_week_of_year, fiscal_dates.financial_day_of_year,
+#       fiscal_dates.financial_year_quarter_label, fiscal_dates.financial_quarters_ago,
+#       fiscal_dates.first_day_of_financial_quarter, fiscal_dates.financial_month_of_quarter,
+#       fiscal_dates.financial_week_of_quarter, fiscal_dates.financial_day_of_quarter,
+#       fiscal_dates.financial_year_quarter_month_label, fiscal_dates.financial_months_ago,
+#       fiscal_dates.first_day_of_financial_month, fiscal_dates.financial_week_of_month,
+#       fiscal_dates.financial_day_of_month, fiscal_dates.financial_year_quarter_month_week_label,
+#       fiscal_dates.financial_weeks_ago, fiscal_dates.first_day_of_financial_week, fiscal_dates.day_of_week,
+#       fiscal_dates.week1_day1, fiscal_dates.range_days, fiscal_dates.count]
+
+    drill_fields: [base_date_date, financial_year, financial_years_ago,
+      first_day_of_financial_year, financial_quarter_of_year,
+      financial_month_of_year, financial_week_of_year, financial_day_of_year,
+      financial_year_quarter_label, financial_quarters_ago,
+      first_day_of_financial_quarter, financial_month_of_quarter,
+      financial_week_of_quarter, financial_day_of_quarter,
+      financial_year_quarter_month_label, financial_months_ago,
+      first_day_of_financial_month, financial_week_of_month,
+      financial_day_of_month, financial_year_quarter_month_week_label,
+      financial_weeks_ago, first_day_of_financial_week, day_of_week,
+      week1_day1, range_days, count]
+
       html: <a href="{{link}}" target="_blank">{{rendered_value}}</a> ;;
     }
 ### } end section 04
