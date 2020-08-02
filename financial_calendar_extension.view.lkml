@@ -24,13 +24,14 @@ view: financial_calendar_extension {
   }
 
   dimension: fiscal_calendar_type {
-    sql:
-    {% if fiscal_calendar_selector._parameter_value == "'4-4-5'"%}4-4-5
-    {% elsif fiscal_calendar_selector._parameter_value == "'4-5-4'"%}4-5-4
-    {% elsif fiscal_calendar_selector._parameter_value == "'5-4-4'"%}5-4-4
-    {%else%}{{default_fiscal_calendar_type._sql |strip}}
-    {%endif%}
-        ;;
+#     sql:
+#     {% if fiscal_calendar_selector._parameter_value == "'4-4-5'"%}4-4-5
+#     {% elsif fiscal_calendar_selector._parameter_value == "'4-5-4'"%}4-5-4
+#     {% elsif fiscal_calendar_selector._parameter_value == "'5-4-4'"%}5-4-4
+#     {%else%}{{default_fiscal_calendar_type._sql |strip}}
+#     {%endif%}
+#         ;;
+    sql:4-4-5;;
   }
 
 ### } end section 00B
@@ -367,8 +368,8 @@ dimension: financial_day_of_quarter {
 }
 dimension: financial_day_of_month {
   type: number
-#   sql: (${financial_week_of_month}-1)*7+${day_of_week} ;;
-  sql: 1 ;;#test ability to fix broken reference
+  sql: (${financial_week_of_month}-1)*7+${day_of_week} ;;
+#   sql: 1 ;;#test ability to fix broken reference
 }
 
 #first day fields
