@@ -170,7 +170,7 @@ dimension: now_financial_month_of_year {
   required_fields: [fiscal_calendar_type]
   type: number
   sql:
-    {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
+    {% assign calendar_type_sql = "${fiscal_calendar_type}" | strip |replace:'-','+' %}
     {% assign calendar_type_sql = calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql %}
     case
     when ${now_days_since_week1_day1} is null then null
