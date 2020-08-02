@@ -27,7 +27,9 @@ view: financial_calendar_extension {
 #     sql:4-4-5;;
     #sql:4-5-4;;
     sql:
-    {% if fiscal_calendar_selector._parameter_value == 'test' %}5-4-4{% endif %}
+    {% if fiscal_calendar_selector._in_query %}--inquery
+    {% else %} --another note
+    {% endif %}
     5-4-4;;
   }
 
