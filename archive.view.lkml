@@ -1,26 +1,5 @@
-###Block definition below
-#base field variable set in manifest...# constant: my_base_field_for_financial_calendar {value: "${created_raw}"}
-#Note: uses expression for date_add
-#assumes all dialects can use same case when syntax
-#doesn't label Fiscal quarter like 'FQ 1' as yet, just uses numbers
 view: financial_calendar_extension {
   extension: required
-
-  parameter: fiscal_calendar_selector {
-    allowed_value: {value:"4-4-5"}
-    allowed_value: {value:"4-5-4"}
-    allowed_value: {value:"5-4-4"}
-  }
-
-  dimension: fiscal_calendar_type {
-    sql:
-    {% if fiscal_calendar_selector._parameter_value == "'4-4-5'"%}4-4-5
-    {% elsif fiscal_calendar_selector._parameter_value == "'4-5-4'"%}4-5-4
-    {% elsif fiscal_calendar_selector._parameter_value == "'5-4-4'"%}5-4-4
-    {%else%}{{default_fiscal_calendar_type._sql |strip}}
-    {%endif%}
-        ;;
-  }
 
 ### 00: Fields the implementer will configure {
   dimension_group: base_date {
@@ -30,14 +9,11 @@ view: financial_calendar_extension {
 #     sql: @{my_base_field_for_financial_calendar} ;;
     sql: OVERRIDE_ME ;;
   }
-#   dimension: fiscal_calender_type_sql {
-#     sql:
-#     {% assign x = fiscal_calendar_type._sql | strip %}
-#     {% assign x = x |replace:'-','+' %}
-#     {% assign x = x |append:'+' |append:x |append:'+' |append:x |append:'+' |append:x %}
-#     {{x}}
-#         ;;
-#   }
+
+  dimension: fiscal_calendar_type {
+    sql:4-4-5;; #Other choices: sql:4-5-4;; or sql:5-4-4;;
+  }
+
 ### } end section 00
 
 ### 00B: Initial helper fields based on what the implementer will configure {
@@ -45,6 +21,7 @@ view: financial_calendar_extension {
     type: number
     sql: ({{fiscal_calendar_type._sql | strip |replace:'-','+' }}) ;;
   }
+
 ### } end section 00B
 
 ### 01: Get the first monday of the corresponding year as the key to subsequent calculations {
@@ -181,6 +158,7 @@ dimension: now_financial_quarter_as_a_number {
   sql: ${now_financial_year}*4+${now_financial_quarter_of_year} ;;
 }
 dimension: now_financial_month_of_year {
+  required_fields: [fiscal_calendar_type]
   type: number
   sql:
     {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
@@ -204,6 +182,7 @@ dimension: now_financial_month_of_year {
     ;;
 }
 dimension: now_financial_month_as_a_number {
+  required_fields: [now_financial_month_of_year]
   type: number
   sql: ${now_financial_year}*12+${now_financial_month_of_year} ;;
 }
@@ -380,18 +359,8 @@ dimension: financial_day_of_quarter {
 dimension: financial_day_of_month {
   type: number
   sql: (${financial_week_of_month}-1)*7+${day_of_week} ;;
+#   sql: 1 ;;#test ability to fix broken reference
 }
-
-#or should this be order by first day of financial week? #can't do difference math on this, but at least it's sortable
-#   dimension: financial_year_and_quarter_week_of_quarter_sort {
-#     type: number
-#     sql:${fiscal_dates.financial_year}*1000+${fiscal_dates.financial_quarter_of_year}*100+${financial_week_of_quarter};;
-#   }
-#   dimension: financial_year_and_quarter_week_of_quarter_label {
-#     order_by_field: financial_year_and_quarter_week_of_quarter_sort
-#     type: string
-#     expression: concat(${fiscal_dates.financial_year},"-",${fiscal_dates.financial_quarter_of_year},"-",${financial_week_of_quarter});;
-#   }
 
 #first day fields
 dimension: first_day_of_financial_year {
@@ -414,102 +383,74 @@ dimension: first_day_of_financial_quarter {
   ,add_days((${financial_quarter_of_year}-1)*7*${fiscal_calendar_type_sql_number},${week1_day1})
   )
       ;;
-  #     expression:
-  #     if(${fiscal_dates.days_since_week1_day1}<0
-  #     ,add_days((4-1)*13*7,${fiscal_dates.week1_day1_one_year_prior})
-  #     ,add_days((${fiscal_dates.financial_quarter_of_year}-1)*7*${fiscal_dates.fiscal_calendar_type_sql_number},${fiscal_dates.week1_day1})
-  #     )
-  #     ;;
-  }
+}
 
-  dimension: first_day_of_financial_month {
-    convert_tz: no
-    type: date
-#     sql:
-#     {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
-#     {% assign calendar_type_sql = calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql %}
-#     case
-#     when ${financial_day_of_year} is null then null
-#     when ${financial_day_of_year}<0 then 0
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,1}})*7+1 then ${financial_day_of_year}
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,3}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,3}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,5}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,5}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,7}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,7}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,9}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,9}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,11}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,11}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,13}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,13}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,15}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,15}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,17}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,17}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,19}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,19}}-1)*7
-#     when ${financial_day_of_year}<({{calendar_type_sql | slice: 0,21}})*7+1 then ${financial_day_of_year} - ({{calendar_type_sql | slice: 0,21}}-1)*7
-#     else 12
-#     end
-#     ;;
-# expression: add_days(-1*(${financial_day_of_month}-1),${fiscal_dates.base_date_date});;
-    expression: add_days(-1*(${financial_day_of_month}-1),${base_date_date_for_expression});;
-  }
-  dimension: base_date_date_for_expression {
-    type: date
-    convert_tz: no
-    datatype: date
-    sql: ${base_date_date::date} ;;
-  }
-  dimension: first_day_of_financial_week {
-    convert_tz: no
-    type: date
-    expression: add_days(-1*(${day_of_week}-1),${base_date_date_for_expression});;
+dimension: first_day_of_financial_month {
+  convert_tz: no
+  type: date
+  expression: add_days(-1*(${financial_day_of_month}-1),${base_date_date_for_expression});;
+}
+dimension: base_date_date_for_expression {
+  type: date
+  convert_tz: no
+  datatype: date
+  sql: ${base_date_date::date} ;;
+}
+dimension: first_day_of_financial_week {
+  convert_tz: no
+  type: date
+  expression: add_days(-1*(${day_of_week}-1),${base_date_date_for_expression});;
 
-  }
+}
 
 
 ###}end section 03
 
 ### 04 For validation support {
-  measure: count_distinct_days {
-    type: count_distinct
-    sql: ${base_date_date} ;;
-  }
-  measure: range_days {
-    type: string
-    sql: min(${base_date_date}) || '-' || max(${base_date_date}) ;;
-  }
-  measure: min_date {
-    convert_tz: no
-    type: date
-    sql: min(${base_date_date});;
-  }
-  measure: max_date {
-    convert_tz: no
-    type: date
-    sql:max(${base_date_date}) ;;
-  }
-  measure: min_day_of_year {
-    convert_tz: no
-    type: date_day_of_year
-    sql: min(${base_date_date});;
-  }
-  measure: max_day_of_year {
-    convert_tz: no
-    type: date_day_of_year
-    sql:max(${base_date_date}) ;;
-  }
-  measure: drill_to_daily_calculations_support {
-    type: string
-    sql: concat(${count_distinct_days}, ' days. Click for each qualifying days fiscal classifications') ;;
+measure: count_distinct_days {
+  type: count_distinct
+  sql: ${base_date_date} ;;
+}
+measure: range_days {
+  type: string
+  sql: min(${base_date_date}) || '-' || max(${base_date_date}) ;;
+}
+measure: min_date {
+  convert_tz: no
+  type: date
+  sql: min(${base_date_date});;
+}
+measure: max_date {
+  convert_tz: no
+  type: date
+  sql:max(${base_date_date}) ;;
+}
+measure: min_day_of_year {
+  convert_tz: no
+  type: date_day_of_year
+  sql: min(${base_date_date});;
+}
+measure: max_day_of_year {
+  convert_tz: no
+  type: date_day_of_year
+  sql:max(${base_date_date}) ;;
+}
+measure: drill_to_daily_calculations_support {
+  type: string
+  sql: concat(${count_distinct_days}, ' days. Click for each qualifying days fiscal classifications') ;;
+  drill_fields: [base_date_date, financial_year, financial_years_ago,
+    first_day_of_financial_year, financial_quarter_of_year,
+    financial_month_of_year, financial_week_of_year, financial_day_of_year,
+    financial_year_quarter_label, financial_quarters_ago,
+    first_day_of_financial_quarter, financial_month_of_quarter,
+    financial_week_of_quarter, financial_day_of_quarter,
+    financial_year_quarter_month_label, financial_months_ago,
+    first_day_of_financial_month, financial_week_of_month,
+    financial_day_of_month, financial_year_quarter_month_week_label,
+    financial_weeks_ago, first_day_of_financial_week, day_of_week,
+    week1_day1, range_days, count]
 
-    drill_fields: [fiscal_dates.base_date_date, fiscal_dates.financial_year, fiscal_dates.financial_years_ago,
-      fiscal_dates.first_day_of_financial_year, fiscal_dates.financial_quarter_of_year,
-      fiscal_dates.financial_month_of_year, fiscal_dates.financial_week_of_year, fiscal_dates.financial_day_of_year,
-      fiscal_dates.financial_year_quarter_label, fiscal_dates.financial_quarters_ago,
-      fiscal_dates.first_day_of_financial_quarter, fiscal_dates.financial_month_of_quarter,
-      fiscal_dates.financial_week_of_quarter, fiscal_dates.financial_day_of_quarter,
-      fiscal_dates.financial_year_quarter_month_label, fiscal_dates.financial_months_ago,
-      fiscal_dates.first_day_of_financial_month, fiscal_dates.financial_week_of_month,
-      fiscal_dates.financial_day_of_month, fiscal_dates.financial_year_quarter_month_week_label,
-      fiscal_dates.financial_weeks_ago, fiscal_dates.first_day_of_financial_week, fiscal_dates.day_of_week,
-      fiscal_dates.week1_day1, fiscal_dates.range_days, fiscal_dates.count]
-#     html: <a href>{{linked_value}}</a> ;;
-      html: <a href="{{link}}" target="_blank">{{rendered_value}}</a> ;;
-    }
+  html: <a href="{{link}}" target="_blank">{{rendered_value}}</a> ;;
+}
 ### } end section 04
-  }
+}
