@@ -190,6 +190,7 @@ dimension: now_financial_month_of_year {
     ;;
 }
 dimension: now_financial_month_as_a_number {
+  required_fields: [now_financial_month_of_year]
   type: number
   sql: ${now_financial_year}*12+${now_financial_month_of_year} ;;
 }
