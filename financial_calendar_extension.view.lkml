@@ -26,7 +26,9 @@ view: financial_calendar_extension {
   dimension: fiscal_calendar_type {
 #     sql:4-4-5;;
     #sql:4-5-4;;
-    sql:5-4-4;;
+    sql:
+    {% if fiscal_calendar_selector._parameter_value == 'test' %}5-4-4{%endif%}
+    5-4-4;;
   }
 
 ### } end section 00B
