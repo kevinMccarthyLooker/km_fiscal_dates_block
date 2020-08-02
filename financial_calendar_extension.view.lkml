@@ -9,16 +9,17 @@ view: financial_calendar_extension {
 #     sql: @{my_base_field_for_financial_calendar} ;;
     sql: OVERRIDE_ME ;;
   }
+
+  dimension: fiscal_calendar_type {
+    sql:4-4-5;; #Other choices: sql:4-5-4;; or sql:5-4-4;;
+  }
+
 ### } end section 00
 
 ### 00B: Initial helper fields based on what the implementer will configure {
   dimension: fiscal_calendar_type_sql_number {
     type: number
     sql: ({{fiscal_calendar_type._sql | strip |replace:'-','+' }}) ;;
-  }
-
-  dimension: fiscal_calendar_type {
-    sql:4-4-5;; #Other choices: sql:4-5-4;; or sql:5-4-4;;
   }
 
 ### } end section 00B
