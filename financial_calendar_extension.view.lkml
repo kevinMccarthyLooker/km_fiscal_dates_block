@@ -9,12 +9,6 @@ view: financial_calendar_extension {
 #     sql: @{my_base_field_for_financial_calendar} ;;
     sql: OVERRIDE_ME ;;
   }
-  parameter: fiscal_calendar_selector {
-    allowed_value: {value:"4-4-5"}
-    allowed_value: {value:"4-5-4"}
-    allowed_value: {value:"5-4-4"}
-    default_value: "4-4-5"
-  }
 ### } end section 00
 
 ### 00B: Initial helper fields based on what the implementer will configure {
@@ -24,13 +18,7 @@ view: financial_calendar_extension {
   }
 
   dimension: fiscal_calendar_type {
-#     sql:4-4-5;;
-    #sql:4-5-4;;
-    sql:
-    {% if fiscal_calendar_selector._in_query %}--inquery
-    {% else %} --another note
-    {% endif %}
-    5-4-4;;
+    sql:4-4-5;; #Other choices: sql:4-5-4;; or sql:5-4-4;;
   }
 
 ### } end section 00B
