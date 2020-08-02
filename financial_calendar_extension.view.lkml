@@ -367,7 +367,8 @@ dimension: financial_day_of_quarter {
 }
 dimension: financial_day_of_month {
   type: number
-  sql: (${financial_week_of_month}-1)*7+${day_of_week} ;;
+#   sql: (${financial_week_of_month}-1)*7+${day_of_week} ;;
+  sql: 1 ;;#test ability to fix broken reference
 }
 
 #first day fields
