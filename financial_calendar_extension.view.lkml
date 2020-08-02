@@ -161,7 +161,7 @@ dimension: now_financial_month_of_year {
   required_fields: [fiscal_calendar_type]
   type: number
   sql:
-    {% assign calendar_type_sql = "${fiscal_calendar_type}" | strip |replace:'-','+' %}
+    {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
     {% assign calendar_type_sql = calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql %}
     case
     when ${now_days_since_week1_day1} is null then null
@@ -273,7 +273,7 @@ dimension: financial_year_quarter_month_label {
 dimension: financial_month_of_year {
   type: number
   sql:
-    {% assign calendar_type_sql = "${fiscal_calendar_type}" | strip |replace:'-','+' %}
+    {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
     {% assign calendar_type_sql = calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql |append:'+' |append:calendar_type_sql %}
         case
          when ${days_since_week1_day1} is null then null
@@ -329,7 +329,7 @@ dimension: financial_week_of_quarter {
 dimension: financial_week_of_month {
   type: number
   sql:
-  {% assign calendar_type_sql = "${fiscal_calendar_type}" | strip |replace:'-','+' %}
+  {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
   case
     when ${financial_week_of_quarter} is null then null
     when ${financial_week_of_quarter}<={{calendar_type_sql | slice: 0,1}} then ${financial_week_of_quarter}
@@ -341,7 +341,7 @@ dimension: financial_week_of_month {
 dimension: financial_week_of_month_for_label {
   type: number
   sql:
-  {% assign calendar_type_sql = "${fiscal_calendar_type}" | strip |replace:'-','+' %}
+  {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
   case
     when ${financial_week_of_quarter} is null then null
     when ${financial_week_of_quarter}<={{calendar_type_sql | slice: 0,1}} then ${financial_week_of_quarter}
