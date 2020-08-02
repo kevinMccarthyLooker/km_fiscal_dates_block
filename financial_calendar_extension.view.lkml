@@ -167,6 +167,7 @@ dimension: now_financial_quarter_as_a_number {
   sql: ${now_financial_year}*4+${now_financial_quarter_of_year} ;;
 }
 dimension: now_financial_month_of_year {
+  required_fields: [fiscal_calendar_type]
   type: number
   sql:
     {% assign calendar_type_sql = fiscal_calendar_type._sql | strip |replace:'-','+' %}
