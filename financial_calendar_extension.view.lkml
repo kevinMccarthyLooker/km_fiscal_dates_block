@@ -1,4 +1,6 @@
-#Version: V1
+#Version: V1.1
+## Version History
+# Fix applied adding ::number to numeric fields like ${now_date_year::number}
 
 ###Block definition below
 #base field variable set in manifest...# constant: my_base_field_for_financial_calendar {value: "${created_raw}"}
