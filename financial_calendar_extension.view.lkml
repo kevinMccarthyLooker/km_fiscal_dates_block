@@ -1,3 +1,5 @@
+#Version: V1
+
 ###Block definition below
 #base field variable set in manifest...# constant: my_base_field_for_financial_calendar {value: "${created_raw}"}
 #Note: uses expression for date_add
