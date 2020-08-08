@@ -1,6 +1,7 @@
-#Version: V1.1
+#Version: V1.2
 ## Version History
 # Fix applied adding ::number to numeric fields like ${now_date_year::number}
+# added required fields on jan_1 day for athena using string in expression instead of date
 
 ###Block definition below
 #base field variable set in manifest...# constant: my_base_field_for_financial_calendar {value: "${created_raw}"}
