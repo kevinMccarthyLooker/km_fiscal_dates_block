@@ -237,7 +237,7 @@ dimension: financial_days_since_2019_01_01 {
 ### } end section 02B
 dimension: financial_years_ago {
   type: number
-  sql: ${now_financial_year}-${financial_year} ;;
+  sql: ${now_financial_year::number}-${financial_year::number} ;;
 }
 dimension: financial_quarters_ago {
   type: number
