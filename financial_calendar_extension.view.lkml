@@ -78,6 +78,7 @@ view: financial_calendar_extension {
     expression:mod(7-${one_year_prior_jan_1_day_of_week_index},7);;
   }
   dimension: one_year_prior_first_monday {
+    required_fields: [one_year_prior_jan_1_day] #8/8 athena was treating it as a string
     type: date  convert_tz: no #base field would've already been converted
     expression:add_days(${one_year_prior_jan_1_day_to_first_monday_number_days},${one_year_prior_jan_1_day});;#   expression:if(${one_year_prior_jan_1_day_of_week_index}=0,${one_year_prior_jan_1_day},add_days((7-${one_year_prior_jan_1_day_of_week_index}),${one_year_prior_jan_1_day}));;
   }
