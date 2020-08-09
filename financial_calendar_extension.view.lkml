@@ -236,7 +236,7 @@ view: financial_calendar_extension {
     ;;
   }
   dimension: first_day_of_financial_quarter {
-    required_fields: [fiscal_calendar_type_sql_number]
+    required_fields: [fiscal_calendar_type_sql_number,first_monday,one_year_prior_first_monday]
     type: date  convert_tz: no
     expression:
     if(${days_since_first_monday}<0
@@ -440,3 +440,5 @@ view: financial_calendar_extension {
     }
 ### } end section 04
   }
+
+###adding required fields to each expression based field
