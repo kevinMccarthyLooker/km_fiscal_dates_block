@@ -130,11 +130,13 @@ view: financial_calendar_extension {
   dimension: now_financial_quarter_of_year {
     type: number
     sql:
-    case
-      when ${now_days_since_first_monday}<0 then 4
-      when ${now_days_since_first_monday}>=3*7*13 then 4
-      else ${now_days_since_first_monday}/(7*13)+1
-    end ;;
+    floor(
+      case
+        when ${now_days_since_first_monday}<0 then 4
+        when ${now_days_since_first_monday}>=3*7*13 then 4
+        else ${now_days_since_first_monday}/(7*13)+1
+      end
+    );;
   }
   dimension: now_financial_quarter_as_a_number {
     type: number
@@ -170,10 +172,12 @@ view: financial_calendar_extension {
   dimension: now_financial_week_of_year {
     type: number
     sql:
+    floor(
     case
       when ${now_days_since_first_monday}<0 then ${now_days_since_first_monday_one_year_prior}/7+1
       else ${now_days_since_first_monday}/7+1
-    end;;
+    end
+    );;
   }
   dimension: reference_date {
     type: date  convert_tz: no
@@ -207,7 +211,7 @@ view: financial_calendar_extension {
   }
   dimension: financial_weeks_ago {
     type: number
-    sql:${now_days_since_reference_date}/7-${days_since_reference_date}/7  ;;
+    sql:floor(${now_days_since_reference_date}/7)-floor(${days_since_reference_date}/7)  ;;
   }
   ### } end section 02B
   ### 02C: Fully Qualified Label Fields {
@@ -275,21 +279,25 @@ view: financial_calendar_extension {
   dimension: financial_quarter_of_year {
     type: number
     sql:
-    case
-      when ${days_since_first_monday}<0 then 4
-      when ${days_since_first_monday}>=3*7*13 then 4
-      else ${days_since_first_monday}/(7*13)+1
-    end ;;
+    floor(
+      case
+        when ${days_since_first_monday}<0 then 4
+        when ${days_since_first_monday}>=3*7*13 then 4
+        else ${days_since_first_monday}/(7*13)+1
+      end
+    );;
   }
   #duplicate copy becasue a field can't be selected and used in expression at same time
   dimension: financial_quarter_of_year_for_expression {
     type: number
     sql:
-    case
-      when ${days_since_first_monday}<0 then 4
-      when ${days_since_first_monday}>=3*7*13 then 4
-      else ${days_since_first_monday}/(7*13)+1
-    end ;;
+    floor(
+      case
+        when ${days_since_first_monday}<0 then 4
+        when ${days_since_first_monday}>=3*7*13 then 4
+        else ${days_since_first_monday}/(7*13)+1
+      end
+    );;
   }
   ### } end section 03B
 
@@ -332,14 +340,16 @@ view: financial_calendar_extension {
   dimension: financial_week_of_year {
     type: number
     sql:
-    case
-      when ${days_since_first_monday}<0 then ${one_year_prior_days_since_first_monday}/7+1
-      else ${days_since_first_monday}/7+1
-    end;;
+    floor(
+      case
+        when ${days_since_first_monday}<0 then ${one_year_prior_days_since_first_monday}/7+1
+        else ${days_since_first_monday}/7+1
+      end
+    );;
   }
   dimension: financial_week_of_quarter {
     type: number
-    sql: (${financial_day_of_quarter}-1)/7+1 ;; #     sql: ((${financial_day_of_year}-1)-((${financial_quarter_of_year}-1)*7*13))/7+1;;
+    sql: floor((${financial_day_of_quarter}-1)/7+1) ;; #     sql: ((${financial_day_of_year}-1)-((${financial_quarter_of_year}-1)*7*13))/7+1;;
   }
   dimension: financial_week_of_month {
     type: number
