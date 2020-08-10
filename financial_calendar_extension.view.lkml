@@ -241,7 +241,7 @@ view: financial_calendar_extension {
     ;;
   }
   dimension: first_day_of_financial_quarter {
-    required_fields: [fiscal_calendar_type_sql_number,first_monday,one_year_prior_first_monday]
+    required_fields: [fiscal_calendar_type_sql_number,first_monday,one_year_prior_first_monday,financial_quarter_of_year]
     type: date  convert_tz: no
     expression:
     if(${days_since_first_monday}<0
