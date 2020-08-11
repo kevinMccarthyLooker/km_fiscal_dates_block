@@ -224,9 +224,9 @@ view: financial_calendar_extension {
     expression: concat(${financial_year},"-",${financial_quarter_of_year_for_expression},"-",${financial_month_of_quarter});;
   }
   dimension: financial_year_quarter_month_week_label {
-    required_fields: [financial_week_of_month,financial_month_of_quarter,financial_quarter_of_year,financial_year]
+    required_fields: [financial_week_of_month,financial_month_of_quarter,financial_quarter_of_year_for_expression,financial_year]
     type: string
-    expression: concat(${financial_year},"-",${financial_quarter_of_year},"-",${financial_month_of_quarter},"-",${financial_week_of_month_for_expression});;
+    expression: concat(${financial_year},"-",${financial_quarter_of_year_for_expression},"-",${financial_month_of_quarter},"-",${financial_week_of_month_for_expression});;
   }
   ### } end section 02C
 ### Section 02D: first day fields {
@@ -241,12 +241,12 @@ view: financial_calendar_extension {
     ;;
   }
   dimension: first_day_of_financial_quarter {
-    required_fields: [fiscal_calendar_type_sql_number,first_monday,one_year_prior_first_monday,financial_quarter_of_year]
+    required_fields: [fiscal_calendar_type_sql_number,first_monday,one_year_prior_first_monday,financial_quarter_of_year_for_expression]
     type: date  convert_tz: no
     expression:
     if(${days_since_first_monday}<0
     ,add_days((4-1)*13*7,${one_year_prior_first_monday})
-    ,add_days((${financial_quarter_of_year}-1)*7*${fiscal_calendar_type_sql_number},${first_monday})
+    ,add_days((${financial_quarter_of_year_for_expression}-1)*7*${fiscal_calendar_type_sql_number},${first_monday})
     )
         ;;
   }
