@@ -278,24 +278,44 @@ view: financial_calendar_extension {
   }
   dimension: financial_quarter_of_year {
     type: number
+#     sql:
+#     floor(
+#       case
+#         when ${days_since_first_monday}<0 then 4
+#         when ${days_since_first_monday}>=3*7*13 then 4
+#         else ${days_since_first_monday}/(7*13)+1
+#       end
+#     );;
     sql:
     floor(
       case
         when ${days_since_first_monday}<0 then 4
+        when ${days_since_first_monday}<1*7*13 then 1
+        when ${days_since_first_monday}<2*7*13 then 2
+        when ${days_since_first_monday}<3*7*13 then 3
         when ${days_since_first_monday}>=3*7*13 then 4
-        else ${days_since_first_monday}/(7*13)+1
       end
     );;
   }
   #duplicate copy becasue a field can't be selected and used in expression at same time
   dimension: financial_quarter_of_year_for_expression {
     type: number
+#     sql:
+#     floor(
+#       case
+#         when ${days_since_first_monday}<0 then 4
+#         when ${days_since_first_monday}>=3*7*13 then 4
+#         else ${days_since_first_monday}/(7*13)+1
+#       end
+#     );;
     sql:
     floor(
       case
         when ${days_since_first_monday}<0 then 4
+        when ${days_since_first_monday}<1*7*13 then 1
+        when ${days_since_first_monday}<2*7*13 then 2
+        when ${days_since_first_monday}<3*7*13 then 3
         when ${days_since_first_monday}>=3*7*13 then 4
-        else ${days_since_first_monday}/(7*13)+1
       end
     );;
   }
