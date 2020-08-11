@@ -286,15 +286,25 @@ view: financial_calendar_extension {
 #         else ${days_since_first_monday}/(7*13)+1
 #       end
 #     );;
-    sql:
-    floor(
-      case
-        when ${days_since_first_monday}<0 then 4
-        when ${days_since_first_monday}<1*7*13 then 1
-        when ${days_since_first_monday}<2*7*13 then 2
-        when ${days_since_first_monday}<3*7*13 then 3
-        when ${days_since_first_monday}>=3*7*13 then 4
-      end
+#     sql:
+#     floor(
+#       case
+#         when ${days_since_first_monday}<0 then 4
+#         when ${days_since_first_monday}<1*7*13 then 1
+#         when ${days_since_first_monday}<2*7*13 then 2
+#         when ${days_since_first_monday}<3*7*13 then 3
+#         when ${days_since_first_monday}>=3*7*13 then 4
+#       end
+#     );;
+    expression:
+    if(${order_items.days_since_first_monday}<0,4,
+    if(${order_items.days_since_first_monday}<1*7*13,1,
+    if(${order_items.days_since_first_monday}<2*7*13,2,
+    if(${order_items.days_since_first_monday}<3*7*13,3,
+    4
+    )
+    )
+    )
     );;
   }
   #duplicate copy becasue a field can't be selected and used in expression at same time
@@ -308,16 +318,26 @@ view: financial_calendar_extension {
 #         else ${days_since_first_monday}/(7*13)+1
 #       end
 #     );;
-    sql:
-    floor(
-      case
-        when ${days_since_first_monday}<0 then 4
-        when ${days_since_first_monday}<1*7*13 then 1
-        when ${days_since_first_monday}<2*7*13 then 2
-        when ${days_since_first_monday}<3*7*13 then 3
-        when ${days_since_first_monday}>=3*7*13 then 4
-      end
-    );;
+#     sql:
+#     floor(
+#       case
+#         when ${days_since_first_monday}<0 then 4
+#         when ${days_since_first_monday}<1*7*13 then 1
+#         when ${days_since_first_monday}<2*7*13 then 2
+#         when ${days_since_first_monday}<3*7*13 then 3
+#         when ${days_since_first_monday}>=3*7*13 then 4
+#       end
+#     );;
+expression:
+if(${order_items.days_since_first_monday}<0,4,
+  if(${order_items.days_since_first_monday}<1*7*13,1,
+    if(${order_items.days_since_first_monday}<2*7*13,2,
+      if(${order_items.days_since_first_monday}<3*7*13,3,
+        4
+      )
+    )
+  )
+);;
   }
   ### } end section 03B
 
